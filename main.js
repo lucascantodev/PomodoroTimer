@@ -5,7 +5,7 @@ const timer = {
     longBreakInterval: 4,
 };
 
-const modeButtons = document.querySelector('js-mode-buttons');
+const modeButtons = document.querySelector('#js-mode-buttons');
 modeButtons.addEventListener('click', handleMode);
 
 function handleMode(event) {
@@ -14,6 +14,20 @@ function handleMode(event) {
     if (!mode) return;
 
     switchMode(mode);
+}
+
+console.log("teste");
+
+function updateClock() {
+    const { remainingTime } = timer;
+    const minutes = `${remainingTime.minutes}`.padStart(2, '0');
+    const seconds = `${remainingTime.seconds}`.padStart(2,'0');
+
+    const min = document.getElementById('js-minutes');
+    const sec = document.getElementById('js-seconds');
+
+    min.textContent = minutes;
+    sec.textContent = seconds;
 }
 
 function switchMode(mode) {
@@ -27,7 +41,11 @@ function switchMode(mode) {
     document
     .querySelectorAll('button[data-mode]')
     .forEach(e => e.classList.remove('active'));
-    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+    document
+    .querySelector(`[data-mode="${mode}"]`)
+    .classList.add('active');
+
     document.body.style.backgroundColor = `var(--${mode})`;
 
     updateClock();
