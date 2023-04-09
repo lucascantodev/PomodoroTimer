@@ -1,9 +1,19 @@
+document.addEventListener('DOMContentLoaded', () => {
+    switchMode('pomodoro');
+});
+
 const timer = {
-    pomodoro: 25,
+    pomodoro: 1,
     shortBreak: 5,
     longBreak: 15,
     longBreakInterval: 4,
 };
+
+const mainButton = document.getElementById('js-btn');
+mainButton.addEventListener('click', () => {
+    const { action } = mainButton.dataset;
+    action == 'start' ? startTimer() : null;
+})
 
 const modeButtons = document.querySelector('#js-mode-buttons');
 modeButtons.addEventListener('click', handleMode);
@@ -16,7 +26,22 @@ function handleMode(event) {
     switchMode(mode);
 }
 
-function updateTimer() {
+function getRemainingTime(endTime) {
+    const currentTime = Date.parse(new Date());
+    const difference = endTime - currentTime;
+    
+    const total = Number.parseInt(difference / 1000, 10);
+    const minutes = Number.parseInt((total / 60) % 60, 10);
+    const seconds = Number.parseInt(total % 60, 10);
+
+    return {
+        total,
+        minutes: `${minutes}`.padStart(2, '0'),
+        seconds: `${seconds}`.padStart(2, '0'),
+    };
+}
+
+function updateTimer(endTime) {
     timer.remainingTime = getRemainingTime(endTime);
     updateClock();
 
@@ -30,7 +55,13 @@ function startTimer() {
     let { total } = timer.remainingTime;
     const endTime = Date.parse(new Date()) + total * 1000;
 
-    interval = setInterval(updateTimer, 1000);
+    mainButton.dataset.action = 'stop';
+    mainButton.textContent = 'stop';
+    mainButton.classList.add('active');
+
+    interval = setInterval(() => {
+        updateTimer(endTime);
+    }, 1000);
 
 }
 
