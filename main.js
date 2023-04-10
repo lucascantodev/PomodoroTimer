@@ -12,7 +12,7 @@ const timer = {
 const mainButton = document.getElementById('js-btn');
 mainButton.addEventListener('click', () => {
     const { action } = mainButton.dataset;
-    action == 'start' ? startTimer() : null;
+    action == 'start' ? startTimer() : stopTimer();
 })
 
 const modeButtons = document.querySelector('#js-mode-buttons');
@@ -24,6 +24,7 @@ function handleMode(event) {
     if (!mode) return;
 
     switchMode(mode);
+    stopTimer();
 }
 
 function getRemainingTime(endTime) {
@@ -63,6 +64,14 @@ function startTimer() {
         updateTimer(endTime);
     }, 1000);
 
+}
+
+function stopTimer() {
+    clearInterval(interval);
+
+    mainButton.dataset.action = 'start';
+    mainButton.textContent = 'start';
+    mainButton.classList.remove('active');
 }
 
 function updateClock() {
